@@ -1,15 +1,13 @@
 /**
- * Factor AI Chat Widget — embeddable loader
+ * Factor AI Chat Widget — embeddable loader (Gemini 2.5 Flash Lite)
  *
  * Usage on any website:
  *   <script src="https://YOUR_DEPLOYED_URL/embed.js"></script>
- *
- * Then configure below (apiKey, systemPrompt, branding).
  */
 (function () {
   var DEPLOYED_URL = 'YOUR_DEPLOYED_URL'; // e.g. https://your-app.lovable.app
   var CONFIG = {
-    apiKey: 'YOUR_API_KEY',
+    apiKey: 'YOUR_GEMINI_API_KEY',
     systemPrompt: 'You are a helpful assistant.',
     botName: 'Factor Assistant',
     logoUrl: 'https://yoursite.com/logo.png',
