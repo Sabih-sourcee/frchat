@@ -39,7 +39,7 @@ export function AIChatWidget({
       setMessages((m) => [
         ...m,
         { role: "user", content: text },
-        { role: "assistant", content: "⚠️ Please provide an Anthropic API key to start chatting." },
+        { role: "assistant", content: "⚠️ Please provide a Gemini API key to start chatting." },
       ]);
       setInput("");
       return;
@@ -51,24 +51,26 @@ export function AIChatWidget({
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1024,
-          system: systemPrompt,
-          messages: nextMessages,
-        }),
-      });
+      const contents = nextMessages.map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      }));
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${encodeURIComponent(apiKey)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemPrompt }] },
+            contents,
+            generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+          }),
+        }
+      );
       const data = await response.json();
       const reply =
-        data?.content?.[0]?.text ??
+        data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text).filter(Boolean).join("") ??
         data?.error?.message ??
         "Sorry, I couldn't generate a response.";
       setMessages((m) => [...m, { role: "assistant", content: reply }]);
