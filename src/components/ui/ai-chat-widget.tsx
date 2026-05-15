@@ -32,6 +32,22 @@ export function AIChatWidget({
     }
   }, [messages, isLoading, isOpen]);
 
+  useEffect(() => {
+    const openHandler = () => setIsOpen(true);
+    const askHandler = (e: Event) => {
+      const detail = (e as CustomEvent<{ text?: string }>).detail;
+      setIsOpen(true);
+      if (detail?.text) setInput(detail.text);
+      requestAnimationFrame(() => inputRef.current?.focus());
+    };
+    window.addEventListener("factor-chat:open", openHandler);
+    window.addEventListener("factor-chat:ask", askHandler as EventListener);
+    return () => {
+      window.removeEventListener("factor-chat:open", openHandler);
+      window.removeEventListener("factor-chat:ask", askHandler as EventListener);
+    };
+  }, []);
+
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
