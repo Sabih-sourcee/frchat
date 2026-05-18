@@ -142,7 +142,6 @@ function Index() {
       </footer>
 
       <AIChatWidget
-        apiKey={API_KEY}
         systemPrompt={SYSTEM_PROMPT}
         botName="Factor Assistant"
         primaryColor="#00BFA5"
