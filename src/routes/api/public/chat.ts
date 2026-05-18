@@ -61,18 +61,28 @@ export const Route = createFileRoute("/api/public/chat")({
           );
 
           const data = await upstream.json();
-          const reply =
+          const rawReply =
             data?.candidates?.[0]?.content?.parts
               ?.map((p: { text?: string }) => p.text)
               .filter(Boolean)
               .join("") ?? null;
 
-          if (!reply) {
+          if (!rawReply) {
             return new Response(
               JSON.stringify({ error: data?.error?.message ?? "No response from model." }),
               { status: 502, headers: { "Content-Type": "application/json", ...CORS } },
             );
           }
+
+          // Strip markdown formatting (asterisks, bullets, headings, backticks)
+          const reply = rawReply
+            .replace(/\*\*(.*?)\*\*/g, "$1")           // **bold**
+            .replace(/\*(.*?)\*/g, "$1")                // *italic*
+            .replace(/^\s*[*\-+]\s+/gm, "")             // bullet markers
+            .replace(/^#{1,6}\s+/gm, "")                // # headings
+            .replace(/`([^`]+)`/g, "$1")                // `code`
+            .replace(/\n{3,}/g, "\n\n")                 // collapse blank lines
+            .trim();
 
           return new Response(JSON.stringify({ reply }), {
             status: 200,
