@@ -30,9 +30,10 @@ export const Route = createFileRoute("/api/public/chat")({
 
           const messages = Array.isArray(body.messages) ? body.messages.slice(-30) : [];
           const systemPrompt =
-            typeof body.systemPrompt === "string" && body.systemPrompt.length <= 4000
+            (typeof body.systemPrompt === "string" && body.systemPrompt.length <= 4000
               ? body.systemPrompt
-              : "You are a helpful assistant.";
+              : "You are a helpful assistant.") +
+            "\n\nIMPORTANT FORMATTING: Reply in plain conversational text only. Do NOT use markdown — no asterisks (*, **), no bullet points, no hash headings, no backticks. Write naturally as if speaking. If you need a list, use short sentences or comma-separated items.";
 
           if (messages.length === 0) {
             return new Response(JSON.stringify({ error: "No messages provided." }), {
