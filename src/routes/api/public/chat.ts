@@ -30,9 +30,10 @@ export const Route = createFileRoute("/api/public/chat")({
 
           const messages = Array.isArray(body.messages) ? body.messages.slice(-30) : [];
           const systemPrompt =
-            typeof body.systemPrompt === "string" && body.systemPrompt.length <= 4000
+            (typeof body.systemPrompt === "string" && body.systemPrompt.length <= 4000
               ? body.systemPrompt
-              : "You are a helpful assistant.";
+              : "You are a helpful assistant.") +
+            "\n\nIMPORTANT FORMATTING: Reply in plain conversational text only. Do NOT use markdown — no asterisks (*, **), no bullet points, no hash headings, no backticks. Write naturally as if speaking. If you need a list, use short sentences or comma-separated items.";
 
           if (messages.length === 0) {
             return new Response(JSON.stringify({ error: "No messages provided." }), {
@@ -60,18 +61,28 @@ export const Route = createFileRoute("/api/public/chat")({
           );
 
           const data = await upstream.json();
-          const reply =
+          const rawReply =
             data?.candidates?.[0]?.content?.parts
               ?.map((p: { text?: string }) => p.text)
               .filter(Boolean)
               .join("") ?? null;
 
-          if (!reply) {
+          if (!rawReply) {
             return new Response(
               JSON.stringify({ error: data?.error?.message ?? "No response from model." }),
               { status: 502, headers: { "Content-Type": "application/json", ...CORS } },
             );
           }
+
+          // Strip markdown formatting (asterisks, bullets, headings, backticks)
+          const reply = rawReply
+            .replace(/\*\*(.*?)\*\*/g, "$1")           // **bold**
+            .replace(/\*(.*?)\*/g, "$1")                // *italic*
+            .replace(/^\s*[*\-+]\s+/gm, "")             // bullet markers
+            .replace(/^#{1,6}\s+/gm, "")                // # headings
+            .replace(/`([^`]+)`/g, "$1")                // `code`
+            .replace(/\n{3,}/g, "\n\n")                 // collapse blank lines
+            .trim();
 
           return new Response(JSON.stringify({ reply }), {
             status: 200,
