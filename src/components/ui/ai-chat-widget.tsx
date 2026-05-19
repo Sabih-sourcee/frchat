@@ -89,7 +89,7 @@ export function AIChatWidget({
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] font-sans">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -99,7 +99,7 @@ export function AIChatWidget({
             exit={{ opacity: 0, scale: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
             style={{ transformOrigin: "bottom right" }}
-            className="absolute bottom-20 right-0 w-[380px] h-[520px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
+            className="fixed sm:absolute inset-x-2 bottom-20 sm:inset-x-auto sm:right-0 sm:bottom-20 sm:w-[380px] w-auto h-[min(520px,calc(100dvh-6rem))] sm:h-[520px] mx-auto sm:mx-0 max-w-[420px] sm:max-w-none bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div
