@@ -109,7 +109,20 @@
       var row = document.createElement("div"); row.className = "fc-row " + (m.role === "user" ? "fc-u" : "fc-a");
       var b = document.createElement("div"); b.className = "fc-bubble " + (m.role === "user" ? "fc-u" : "fc-a");
       if (m.role === "user") b.style.background = primaryColor;
-      b.textContent = m.content;
+      var parts = String(m.content).split(/(https?:\/\/[^\s)]+)/g);
+      parts.forEach(function (part) {
+        if (/^https?:\/\//.test(part)) {
+          var a = document.createElement("a");
+          a.href = part; a.target = "_blank"; a.rel = "noopener noreferrer";
+          a.textContent = part;
+          a.style.textDecoration = "underline"; a.style.wordBreak = "break-all";
+          if (m.role !== "user") a.style.color = primaryColor;
+          else a.style.color = "#fff";
+          b.appendChild(a);
+        } else if (part) {
+          b.appendChild(document.createTextNode(part));
+        }
+      });
       row.appendChild(b); msgs.appendChild(row);
     });
     if (loading) {
