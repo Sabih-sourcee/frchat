@@ -31,7 +31,8 @@
     .fc-btn { width: 56px; height: 56px; border-radius: 9999px; border: 0; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,.15); cursor: pointer; display:flex; align-items:center; justify-content:center; position: relative; }
     .fc-btn .fc-ping { position:absolute; inset:0; border-radius:9999px; opacity:.5; animation: fc-ping 1.6s ease-out infinite; }
     @keyframes fc-ping { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(1.5);opacity:0} }
-    .fc-win { position:absolute; bottom:76px; right:0; width:380px; height:520px; background:#fff; border-radius:16px; box-shadow:0 20px 50px rgba(0,0,0,.2); border:1px solid #e5e7eb; display:flex; flex-direction:column; overflow:hidden; transform-origin: bottom right; }
+    .fc-win { position: fixed; left: 8px; right: 8px; bottom: 80px; width: auto; max-width: 420px; margin: 0 auto; height: calc(100dvh - 6rem); max-height: 520px; background:#fff; border-radius:16px; box-shadow:0 20px 50px rgba(0,0,0,.2); border:1px solid #e5e7eb; display:flex; flex-direction:column; overflow:hidden; transform-origin: bottom right; }
+    @media (min-width: 640px) { .fc-win { position:absolute; left:auto; right:0; bottom:76px; width:380px; max-width:none; height:520px; margin:0; } }
     .fc-head { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; color:#fff; }
     .fc-head .fc-title { display:flex; align-items:center; gap:8px; font-weight:600; }
     .fc-x { background:transparent; border:0; color:#fff; cursor:pointer; padding:4px; border-radius:6px; }
