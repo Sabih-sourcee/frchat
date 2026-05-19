@@ -144,7 +144,22 @@ export function AIChatWidget({
                     }`}
                     style={m.role === "user" ? { backgroundColor: primaryColor } : undefined}
                   >
-                    {m.content}
+                    {m.content.split(/(https?:\/\/[^\s)]+)/g).map((part, idx) =>
+                      /^https?:\/\//.test(part) ? (
+                        <a
+                          key={idx}
+                          href={part}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline break-all"
+                          style={m.role === "assistant" ? { color: primaryColor } : undefined}
+                        >
+                          {part}
+                        </a>
+                      ) : (
+                        <span key={idx}>{part}</span>
+                      ),
+                    )}
                   </div>
                 </motion.div>
               ))}
