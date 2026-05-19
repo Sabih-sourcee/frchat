@@ -26,7 +26,8 @@
   // ---------- Inject styles ----------
   var css = `
     .fc-root, .fc-root * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .fc-root { position: fixed; bottom: 24px; right: 24px; z-index: 2147483647; }
+    .fc-root { position: fixed; bottom: 16px; right: 16px; z-index: 2147483647; }
+    @media (min-width: 640px) { .fc-root { bottom: 24px; right: 24px; } }
     .fc-btn { width: 56px; height: 56px; border-radius: 9999px; border: 0; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,.15); cursor: pointer; display:flex; align-items:center; justify-content:center; position: relative; }
     .fc-btn .fc-ping { position:absolute; inset:0; border-radius:9999px; opacity:.5; animation: fc-ping 1.6s ease-out infinite; }
     @keyframes fc-ping { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(1.5);opacity:0} }
